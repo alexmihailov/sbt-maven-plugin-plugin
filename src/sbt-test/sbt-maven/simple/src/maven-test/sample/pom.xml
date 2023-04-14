@@ -4,19 +4,37 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>play.twirl.example</groupId>
+  <groupId>test.test.example</groupId>
   <artifactId>test</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+
+  <properties>
+    <java.version>11</java.version>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.17.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>simple</groupId>
         <artifactId>simple_2.12</artifactId>
-        <version>${test.version}</version>
-        <configuration>
-          <target>C:/Documents/projects/sbt-maven-plugin/temp/target/templates</target>
-        </configuration>
+        <version>0.1.0-SNAPSHOT</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>

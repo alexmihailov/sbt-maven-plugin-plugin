@@ -1,2 +1,4 @@
 > mavenGeneratePluginXml
 $ exists target/scala-2.12/resource_managed/main/META-INF/maven/plugin.xml
+> publishM2
+> mavenTest

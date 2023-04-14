@@ -5,7 +5,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(SbtPlugin)
   .settings(
-    name := "sbt-maven",
+    name := "sbt-maven-plugin-plugin",
     libraryDependencies += "org.apache.maven.plugins" % "maven-plugin-plugin" % Dependencies.Maven,
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {

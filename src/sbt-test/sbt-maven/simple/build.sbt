@@ -1,16 +1,11 @@
 lazy val root = project
   .in(file("."))
-  .enablePlugins(SbtMavenPlugin)
+  .enablePlugins(SbtMavenPluginPlugin)
   .settings(
+    name := "Simple",
     libraryDependencies += "org.apache.maven.plugin-tools" % "maven-plugin-annotations" % "3.8.1" % Provided,
     libraryDependencies += "org.apache.maven" % "maven-core" % "3.8.1" % Provided,
-
-    libraryDependencies += "com.typesafe.play" %% "twirl-compiler" % "1.5.2",
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
-
-    name := "Simple",
-
-    mavenPluginGoalPrefix := "twirl",
+    mavenPluginGoalPrefix := "test-prefix",
     mavenClasspath := (`maven-launcher` / Compile / externalDependencyClasspath).value.map(_.data),
     mavenTestArgs += s"-Dtest.version=${version.value}"
   )

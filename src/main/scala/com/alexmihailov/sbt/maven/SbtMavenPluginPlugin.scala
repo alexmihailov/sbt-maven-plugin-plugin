@@ -13,7 +13,7 @@ import sbt.plugins.JvmPlugin
 import java.io.File
 import java.nio.file.Files
 
-object SbtMavenPlugin extends AutoPlugin {
+object SbtMavenPluginPlugin extends AutoPlugin {
 
   override def trigger = noTrigger
 
@@ -34,7 +34,6 @@ object SbtMavenPlugin extends AutoPlugin {
     mavenTestSettings
 
   def mavenGeneratePluginXmlSettings: Seq[Setting[?]] = Seq(
-    mavenPluginGoalPrefix := name.value,
     mavenPluginEncoding := "UTF-8",
     mavenPluginSkipErrorNoDescriptorsFound := false,
     mavenGeneratePluginXml := {
@@ -85,7 +84,8 @@ object SbtMavenPlugin extends AutoPlugin {
 
       Seq(destinationDirectory / "plugin.xml")
     },
-    resourceGenerators += mavenGeneratePluginXml.taskValue
+    mavenGeneratePluginXml := mavenGeneratePluginXml.dependsOn(compile).value,
+    resourceGenerators += mavenGeneratePluginXml.taskValue,
   )
 
   def mavenTestSettings: Seq[Setting[?]] = Seq(
@@ -121,35 +121,27 @@ object SbtMavenPlugin extends AutoPlugin {
                     mavenTestArgs: Seq[String],
                     toRun: Option[String],
                     log: Logger): Unit = {
-//    val testsToRun: Seq[File] = toRun
-//      .fold(testDirectory.listFiles().toSeq.filter(_.isDirectory)) { dir => Seq(testDirectory / dir) }
-//      .filter(testDir => (testDir / "test").exists) TODO разобраться что это за toRun
-
-    val testsToRun: Seq[File] = testDirectory.listFiles().toSeq.filter(_.isDirectory)
+    val testsToRun: Seq[File] = toRun
+      .fold(testDirectory.listFiles().toSeq.filter(_.isDirectory)) { dir => Seq(testDirectory / dir) }
       .filter(testDir => (testDir / "test").exists)
 
     val results = testsToRun.map { test =>
-      log.info(s"${scala.Console.BOLD} Executing: ${test} ${scala.Console.RESET}")
-
+      log.info(s"${scala.Console.BOLD} Executing: $test ${scala.Console.RESET}")
       val mavenExecutions = IO.readLines(test / "test").map(_.trim).filter(_.nonEmpty)
-
       val testDir = Files.createTempDirectory("maven-test").toFile
       try {
         IO.copyDirectory(test, testDir)
-
         val args = Seq(
           "-cp",
           mavenClasspath.map(_.getAbsolutePath).mkString(File.pathSeparator),
           s"-Dmaven.multiModuleProjectDirectory=${testDir.getAbsolutePath}"
         ) ++
           mavenTestArgs ++
-          // For Maven CLI options see https://maven.apache.org/ref/3.6.2/maven-embedder/cli.html
           Seq(
             "org.apache.maven.cli.MavenCli",
             "--no-transfer-progress", // Do not show Maven download progress
           )
         log.info(s"Running maven test ${test.getName} with arguments ${args.mkString(" ")}")
-
         test.getName -> mavenExecutions.foldLeft(true) { (success, execution) =>
           if (success) {
             log.info(s"Executing mvn $execution")
@@ -175,7 +167,6 @@ object SbtMavenPlugin extends AutoPlugin {
     configuration.fold(true) {
       case "compile" => true
       case "runtime" => true
-      // If it's complex, ignore it
       case _ => false
     }
   }

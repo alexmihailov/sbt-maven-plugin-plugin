@@ -1,1 +1,1 @@
-compile -e
+verify -e
