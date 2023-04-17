@@ -4,4 +4,4 @@ sys.props.get("plugin.version") match {
                          |Specify this property using the scriptedLaunchOpts -D.""".stripMargin)
 }
 
-//addSbtPlugin("com.alexmihailov" % "sbt-maven" % "0.1.0-SNAPSHOT")
+//addSbtPlugin("com.alexmihailov" % "sbt-maven-plugin-plugin" % "0.1.0-SNAPSHOT")

@@ -34,7 +34,6 @@ public class CompileMojo extends AbstractMojo {
     // test project param
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
-
     @Override
     public void execute() {
         File file = new File(target, "hello.txt");

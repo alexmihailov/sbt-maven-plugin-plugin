@@ -37,8 +37,6 @@ public class PluginDescriptorGenerator extends PluginDescriptorFilesGenerator {
         }
     }
 
-    // copy from org.apache.maven.tools.plugin.generator.PluginDescriptorFilesGenerator.writeDescriptor and remove DescriptorType.
-
     // A complete copy of org.apache.maven.tools.plugin.extractor.annotations.JavaAnnotationsMojoDescriptorExtractor.toMojoDescriptors
     // and remove DescriptorType because it is closed for use.
     public void writeDescriptor(File destinationFile, PluginToolsRequest request)

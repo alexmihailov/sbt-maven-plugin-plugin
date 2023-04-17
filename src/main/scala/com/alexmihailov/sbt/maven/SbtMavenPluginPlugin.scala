@@ -33,7 +33,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
   override lazy val projectSettings: Seq[Setting[?]] = inConfig(Compile)(mavenGeneratePluginXmlSettings) ++
     mavenTestSettings
 
-  def mavenGeneratePluginXmlSettings: Seq[Setting[?]] = Seq(
+  private def mavenGeneratePluginXmlSettings: Seq[Setting[?]] = Seq(
     mavenPluginEncoding := "UTF-8",
     mavenPluginSkipErrorNoDescriptorsFound := false,
     mavenGeneratePluginXml := {
@@ -88,7 +88,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
     resourceGenerators += mavenGeneratePluginXml.taskValue,
   )
 
-  def mavenTestSettings: Seq[Setting[?]] = Seq(
+  private def mavenTestSettings: Seq[Setting[?]] = Seq(
     mavenClasspath := Seq.empty,
     mavenTestArgs := Seq(
       "-Xmx768m",
@@ -116,7 +116,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
     }
   )
 
-  def runMavenTests(testDirectory: File,
+  private def runMavenTests(testDirectory: File,
                     mavenClasspath: Seq[File],
                     mavenTestArgs: Seq[String],
                     toRun: Option[String],
