@@ -16,5 +16,5 @@ lazy val root = project
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
     },
-    scriptedBufferLog := false,
+    scriptedBufferLog := false
   )

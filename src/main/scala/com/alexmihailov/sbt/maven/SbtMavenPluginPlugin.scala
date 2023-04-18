@@ -85,7 +85,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
       Seq(destinationDirectory / "plugin.xml")
     },
     mavenGeneratePluginXml := mavenGeneratePluginXml.dependsOn(compile).value,
-    resourceGenerators += mavenGeneratePluginXml.taskValue,
+    resourceGenerators += mavenGeneratePluginXml.taskValue
   )
 
   private def mavenTestSettings: Seq[Setting[?]] = Seq(
@@ -104,7 +104,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
       val toRun = (OptSpace ~> StringBasic).?.parsed
       val runClasspath = mavenClasspath.value
       if (runClasspath.isEmpty) {
-          sys.error("The taskKey 'mavenClasspath' is not defined.")
+        sys.error("The taskKey 'mavenClasspath' is not defined.")
       }
       runMavenTests(
         (mavenTest / sourceDirectory).value,
@@ -116,11 +116,13 @@ object SbtMavenPluginPlugin extends AutoPlugin {
     }
   )
 
-  private def runMavenTests(testDirectory: File,
-                    mavenClasspath: Seq[File],
-                    mavenTestArgs: Seq[String],
-                    toRun: Option[String],
-                    log: Logger): Unit = {
+  private def runMavenTests(
+      testDirectory: File,
+      mavenClasspath: Seq[File],
+      mavenTestArgs: Seq[String],
+      toRun: Option[String],
+      log: Logger
+  ): Unit = {
     val testsToRun: Seq[File] = toRun
       .fold(testDirectory.listFiles().toSeq.filter(_.isDirectory)) { dir => Seq(testDirectory / dir) }
       .filter(testDir => (testDir / "test").exists)
@@ -139,7 +141,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
           mavenTestArgs ++
           Seq(
             "org.apache.maven.cli.MavenCli",
-            "--no-transfer-progress", // Do not show Maven download progress
+            "--no-transfer-progress" // Do not show Maven download progress
           )
         log.info(s"Running maven test ${test.getName} with arguments ${args.mkString(" ")}")
         test.getName -> mavenExecutions.foldLeft(true) { (success, execution) =>
@@ -155,10 +157,10 @@ object SbtMavenPluginPlugin extends AutoPlugin {
         IO.delete(testDir)
       }
     }
-    results.collect {
-      case (name, false) => name
+    results.collect { case (name, false) =>
+      name
     } match {
-      case Nil => // success
+      case Nil         => // success
       case failedTests => sys.error(failedTests.mkString("Maven tests failed: ", ",", ""))
     }
   }
@@ -167,7 +169,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
     configuration.fold(true) {
       case "compile" => true
       case "runtime" => true
-      case _ => false
+      case _         => false
     }
   }
 }
