@@ -1,4 +1,4 @@
-package com.alexmihailov.sbt.maven.tools;
+package io.github.alexmihailov.sbt.maven.tools;
 
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;

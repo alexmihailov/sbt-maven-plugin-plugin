@@ -1,6 +1,6 @@
-package com.alexmihailov.sbt.maven
+package io.github.alexmihailov.sbt.maven
 
-import com.alexmihailov.sbt.maven.tools.{AnnotationsMojoDescriptorExtractor, PluginDescriptorGenerator}
+import io.github.alexmihailov.sbt.maven.tools.{AnnotationsMojoDescriptorExtractor, PluginDescriptorGenerator}
 import org.apache.maven.artifact.DefaultArtifact
 import org.apache.maven.plugin.descriptor.PluginDescriptor
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest

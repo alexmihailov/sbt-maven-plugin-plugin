@@ -1,5 +1,5 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
-ThisBuild / organization := "com.alexmihailov"
+ThisBuild / organization := "io.github.alexmihailov"
 
 lazy val root = project
   .in(file("."))

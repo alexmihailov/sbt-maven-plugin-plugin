@@ -1,4 +1,4 @@
-package com.alexmihailov.sbt.maven.tools;
+package io.github.alexmihailov.sbt.maven.tools;
 
 import org.apache.maven.plugin.descriptor.InvalidParameterException;
 import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;

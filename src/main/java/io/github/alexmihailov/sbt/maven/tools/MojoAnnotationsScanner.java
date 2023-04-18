@@ -1,4 +1,4 @@
-package com.alexmihailov.sbt.maven.tools;
+package io.github.alexmihailov.sbt.maven.tools;
 
 import org.apache.maven.tools.plugin.extractor.ExtractionException;
 import org.apache.maven.tools.plugin.extractor.annotations.scanner.DefaultMojoAnnotationsScanner;
