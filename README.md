@@ -43,6 +43,7 @@ To get the maven launch classpath, you can create a subproject with dependency `
       "-Dorg.slf4j.simpleLogger.showThreadName=false"
 ```
 Through this property, you can pass the version of the plugin being created to be used in `pom.xml`.
+- `mavenPrintTestArgs` - enable printing arguments for maven tests, default value `false`
 
 ## Examples
 

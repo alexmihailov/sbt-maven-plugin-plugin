@@ -25,6 +25,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
     val mavenPluginEncoding = settingKey[String]("Maven plugin encoding")
     val mavenPluginSkipErrorNoDescriptorsFound = settingKey[Boolean]("Skip error when descriptors not found")
     val mavenTestArgs = settingKey[Seq[String]]("Maven test arguments")
+    val mavenPrintTestArgs = settingKey[Boolean]("Print maven test arguments")
     val mavenTest = inputKey[Unit]("Run the maven tests")
     val mavenClasspath = taskKey[Seq[File]]("The maven classpath")
   }
@@ -97,6 +98,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
       "-Dorg.slf4j.simpleLogger.showLogName=false",
       "-Dorg.slf4j.simpleLogger.showThreadName=false"
     ),
+    mavenPrintTestArgs := false,
     mavenTest / sourceDirectory := sourceDirectory.value / "maven-test",
     mavenTest := {
       import sbt.complete.Parsers.*
@@ -111,7 +113,8 @@ object SbtMavenPluginPlugin extends AutoPlugin {
         mavenClasspath.value,
         mavenTestArgs.value,
         toRun,
-        streams.value.log
+        streams.value.log,
+        mavenPrintTestArgs.value
       )
     }
   )
@@ -121,7 +124,8 @@ object SbtMavenPluginPlugin extends AutoPlugin {
       mavenClasspath: Seq[File],
       mavenTestArgs: Seq[String],
       toRun: Option[String],
-      log: Logger
+      log: Logger,
+      printArgs: Boolean
   ): Unit = {
     val testsToRun: Seq[File] = toRun
       .fold(testDirectory.listFiles().toSeq.filter(_.isDirectory)) { dir => Seq(testDirectory / dir) }
@@ -143,7 +147,9 @@ object SbtMavenPluginPlugin extends AutoPlugin {
             "org.apache.maven.cli.MavenCli",
             "--no-transfer-progress" // Do not show Maven download progress
           )
-        log.info(s"Running maven test ${test.getName} with arguments ${args.mkString(" ")}")
+        log.info(
+          s"Running maven test ${test.getName} ${if (printArgs) s"with arguments ${args.mkString(" ")}" else ""}"
+        )
         test.getName -> mavenExecutions.foldLeft(true) { (success, execution) =>
           if (success) {
             log.info(s"Executing mvn $execution")
