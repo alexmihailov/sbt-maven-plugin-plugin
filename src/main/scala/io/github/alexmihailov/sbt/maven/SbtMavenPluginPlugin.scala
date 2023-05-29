@@ -1,10 +1,13 @@
 package io.github.alexmihailov.sbt.maven
 
-import io.github.alexmihailov.sbt.maven.tools.{AnnotationsMojoDescriptorExtractor, PluginDescriptorGenerator}
+import io.github.alexmihailov.sbt.maven.tools.AnnotationsMojoDescriptorExtractor
 import org.apache.maven.artifact.DefaultArtifact
+import org.apache.maven.model.Build
 import org.apache.maven.plugin.descriptor.PluginDescriptor
+import org.apache.maven.project.MavenProject
 import org.apache.maven.tools.plugin.DefaultPluginToolsRequest
 import org.apache.maven.tools.plugin.generator.GeneratorUtils.toComponentDependencies
+import org.apache.maven.tools.plugin.generator.PluginDescriptorFilesGenerator
 import sbt.*
 import sbt.Keys.*
 import sbt.librarymanagement.Configurations.Compile
@@ -63,6 +66,7 @@ object SbtMavenPluginPlugin extends AutoPlugin {
 
       val pid = if (crossPaths.value) cv(projectID.value) else projectID.value
       val pi = projectInfo.value
+      val destinationDirectory = (Compile / resourceManaged).value / "META-INF" / "maven"
 
       val pluginDescriptor = new PluginDescriptor()
       pluginDescriptor.setName(pi.nameFormal)
@@ -73,14 +77,23 @@ object SbtMavenPluginPlugin extends AutoPlugin {
       pluginDescriptor.setGoalPrefix(mavenPluginGoalPrefix.value)
       pluginDescriptor.setDependencies(components)
 
+      val build = new Build()
+      build.setDirectory(destinationDirectory.getAbsolutePath)
+
+      val project = new MavenProject()
+      project.setGroupId(pid.organization)
+      project.setArtifactId(pid.name)
+      project.setBuild(build)
+
       val request = new DefaultPluginToolsRequest(null, pluginDescriptor)
       request.setEncoding(mavenPluginEncoding.value)
       request.setSkipErrorNoDescriptorsFound(mavenPluginSkipErrorNoDescriptorsFound.value)
+      request.setProject(project)
 
       extractor.execute(request).forEach { mojo => pluginDescriptor.addMojo(mojo) }
 
-      val generator = new PluginDescriptorGenerator()
-      val destinationDirectory = (Compile / resourceManaged).value / "META-INF" / "maven"
+      val generator = new PluginDescriptorFilesGenerator()
+
       generator.execute(destinationDirectory, request)
 
       Seq(destinationDirectory / "plugin.xml")
